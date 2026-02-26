@@ -179,9 +179,42 @@
             }
         }
     </script>
+    <div id="popup-agradecimiento" class="fixed inset-0 z-[1000] hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div class="bg-zinc-900 border border-zinc-700 p-8 max-w-md w-full text-center shadow-2xl rounded-sm">
+        <div class="text-orange-500 text-5xl mb-4">✓</div>
+        <h2 class="text-2xl serif-font mb-4 uppercase tracking-widest">¡Gracias por tu compra!</h2>
+        <p class="text-zinc-400 mb-6 text-sm leading-relaxed">
+            Tu entrada ha sido registrada. El día del evento, solo deberás presentarte con tu <b>nombre completo y el mail</b> utilizado en el registro. No es necesario imprimir nada.
+        </p>
+        <button onclick="cerrarPopup()" class="px-8 py-3 bg-white text-black font-bold hover:bg-orange-500 hover:text-white transition uppercase text-xs tracking-widest">
+            Entendido
+        </button>
+    </div>
+</div>
+
+<script>
+    // Función para cerrar el pop-up manualmente
+    function cerrarPopup() {
+        document.getElementById('popup-agradecimiento').classList.add('hidden');
+        // Limpiamos la URL para que no vuelva a aparecer si recargan la página
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    // Lógica para detectar el regreso desde Mercado Pago
+    window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const status = urlParams.get('status');
+
+        if (status === 'success') {
+            document.getElementById('popup-agradecimiento').classList.remove('hidden');
+            document.getElementById('popup-agradecimiento').classList.add('flex');
+        }
+    }
+</script>
 </body>
 
 </html>
+
 
 
 
