@@ -337,27 +337,77 @@
 </div>
 
 <script>
-    // Función para cerrar el pop-up manualmente
-    function cerrarPopup() {
-        document.getElementById('popup-agradecimiento').classList.add('hidden');
-        // Limpiamos la URL para que no vuelva a aparecer si recargan la página
-        window.history.replaceState({}, document.title, window.location.pathname);
-    }
+        const scriptURL = 'TU_URL_DE_APPS_SCRIPT_AQUI';
 
-    // Lógica para detectar el regreso desde Mercado Pago
-    window.onload = function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const status = urlParams.get('status');
-
-        if (status === 'success') {
-            document.getElementById('popup-agradecimiento').classList.remove('hidden');
-            document.getElementById('popup-agradecimiento').classList.add('flex');
+        // Ampliar imagen de galería
+        function ampliar(src) {
+            document.getElementById('img-ampliada').src = src;
+            document.getElementById('lightbox').style.display = 'flex';
         }
-    }
-</script>
+
+        // Cerrar Pop-up y limpiar URL
+        function cerrarPopup() {
+            document.getElementById('popup-agradecimiento').classList.add('hidden');
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        // 1. Registro inicial antes de ir a Mercado Pago
+        async function registrarYSubir(monto, urlMercadoPago) {
+            const nombre = document.getElementById('nombre').value;
+            const email = document.getElementById('email').value;
+
+            if (!nombre || !email) {
+                alert("Por favor, completa nombre y email antes de pagar.");
+                return;
+            }
+
+            // Guardamos el email en localStorage para identificar al usuario al volver
+            localStorage.setItem('userEmail', email);
+
+            const btn = event.currentTarget;
+            btn.innerText = "Registrando...";
+            btn.disabled = true;
+
+            try {
+                // Notificamos a Google Sheets el registro inicial (Pendiente)
+                await fetch(`${scriptURL}?action=registro_inicial&nombre=${encodeURIComponent(nombre)}&email=${encodeURIComponent(email)}&monto=${monto}`, {
+                    method: 'POST',
+                    mode: 'no-cors'
+                });
+                
+                window.location.href = urlMercadoPago;
+            } catch (error) {
+                console.error('Error:', error);
+                window.location.href = urlMercadoPago;
+            }
+        }
+
+        // 2. Detección de regreso desde Mercado Pago
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const status = urlParams.get('status');
+            const emailPagador = localStorage.getItem('userEmail');
+
+            if (status === 'success' && emailPagador) {
+                // Mostrar el Pop-up de éxito
+                document.getElementById('popup-agradecimiento').classList.remove('hidden');
+                document.getElementById('popup-agradecimiento').classList.add('flex');
+
+                // Llamar al script para marcar como pagado y enviar el MAIL
+                fetch(`${scriptURL}?action=confirmar_pago&email=${encodeURIComponent(emailPagador)}`, {
+                    method: 'POST',
+                    mode: 'no-cors'
+                });
+
+                // Limpiamos el email para evitar duplicados si recarga
+                localStorage.removeItem('userEmail');
+            }
+        }
+    </script>
 </body>
 
 </html>
+
 
 
 
