@@ -80,7 +80,7 @@
                 
                 <div class="pt-4 space-y-3">
                     <p class="text-xs uppercase text-zinc-500 font-bold tracking-widest">Selecciona el monto de pago</p>
-                    <button onclick="registrarYSubir(20000, 'URL_MP_20K')" class="block w-full py-4 bg-zinc-100 text-black text-center font-bold hover:bg-orange-500 hover:text-white transition uppercase text-xs">Entrada General - $20.000</button>
+                    <button onclick="registrarYSubir(20000, 'https://mpago.la/1wYCWHd')" class="block w-full py-4 bg-zinc-100 text-black text-center font-bold hover:bg-orange-500 hover:text-white transition uppercase text-xs">Entrada General - $20.000</button>
                     <button onclick="registrarYSubir(35000, 'URL_MP_35K')" class="block w-full py-4 border border-zinc-500 text-center font-bold hover:bg-zinc-100 hover:text-black transition uppercase text-xs">Entrada Especial - $35.000</button>
                     <button onclick="registrarYSubir(50000, 'URL_MP_50K')" class="block w-full py-4 border border-orange-900 text-orange-700 text-center font-bold hover:border-orange-500 hover:text-orange-500 transition uppercase text-xs">Socio Mecenas - $50.000</button>
                 </div>
@@ -134,7 +134,7 @@
     </div>
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbz7LRXPNNWj-XpydhUV_vTloN0womNPn_sxrYN3565eVdIzwOluEKPnXZrzr7MByss/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbx6IDupuEyNT5w_HAv12FyJexGkV-OrInNzvk1y5d3mzWMD00tnIQPA3cv4h3Xpfl5f/exec';
 
         // Ampliar imagen de galería
         function ampliar(src) {
@@ -162,7 +162,7 @@
             localStorage.setItem('userEmail', email);
 
             const btn = event.currentTarget;
-            btn.innerText = "Registrando...";
+            btn.innerText = "Redirigiendo...";
             btn.disabled = true;
 
             try {
@@ -356,6 +356,7 @@
 </body>
 
 </html>
+
 
 
 
