@@ -3,118 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Punto de Encuentro | Landing Page</title>
+    <title>Punto de Encuentro | Proyecto Artístico</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&family=Playfair+Display:italic,wght@0,700;1,700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            background-color: #0a0a0a;
-            color: #f5f5f5;
+            background-color: #F9F9F9;
+            color: #1A1A1A;
+            font-family: 'Montserrat', sans-serif;
             scroll-behavior: smooth;
         }
         .serif-font {
-            font-family: 'Georgia', serif;
+            font-family: 'Playfair Display', serif;
         }
+        .gallery-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
         .gallery-container {
             display: flex;
             overflow-x: auto;
             gap: 20px;
             padding: 20px;
             scrollbar-width: none;
+            scroll-behavior: smooth;
+            width: 100%;
         }
-        .gallery-container::-webkit-scrollbar {
-            display: none;
-        }
+        .gallery-container::-webkit-scrollbar { display: none; }
+        
         .gallery-item {
             flex: 0 0 auto;
             height: 400px;
-            transition: transform 0.3s ease;
+            transition: all 0.4s ease;
             cursor: zoom-in;
+            filter: grayscale(100%);
         }
         .gallery-item:hover {
-            transform: scale(1.02);
+            transform: translateY(-10px);
+            filter: grayscale(0%);
         }
+
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #ddd;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .nav-arrow:hover {
+            background: #000;
+            color: #fff;
+        }
+        .arrow-left { left: 10px; }
+        .arrow-right { right: 10px; }
+
         #lightbox {
             display: none;
             position: fixed;
             z-index: 999;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            justify-content: center;
-            align-items: center;
+            background: rgba(255,255,255,0.98);
+            justify-content: center; align-items: center;
         }
         #lightbox img {
-            max-width: 90%;
-            max-height: 90%;
-            border: 2px solid #333;
+            max-width: 85%; max-height: 85%; box-shadow: 0 20px 50px rgba(0,0,0,0.1);
         }
     </style>
 </head>
 <body>
 
-    <header class="py-16 text-center border-b border-zinc-800">
-        <div class="mb-4 inline-block p-4 border border-zinc-700">
-            <span class="text-3xl font-bold tracking-[0.3em] uppercase">Logo</span>
+    <header class="relative bg-black h-[60vh] overflow-hidden flex items-center justify-center border-b border-gray-200">
+        <img src="img/4.jpg?auto=format&fit=crop&w=800" alt="Punto de Encuentro Banner" class="absolute inset-0 w-full h-full object-cover opacity-50" />
+        <div class="relative z-10 text-center px-6">
+            <h1 class="text-white text-5xl md:text-7xl font-black tracking-[0.4em] uppercase">Punto de encuentro</h1>
         </div>
-        <h1 class="text-5xl tracking-widest uppercase serif-font mt-4">Nombre del Proyecto</h1>
     </header>
 
-    <section class="container mx-auto px-6 py-20 grid lg:grid-cols-2 gap-16 items-center">
+    <section class="container mx-auto px-6 py-24 grid lg:grid-cols-2 gap-20 items-center">
         <div>
-            <span class="text-orange-500 font-bold uppercase tracking-widest text-sm">Próximo Evento</span>
-            <h2 class="text-4xl font-bold mt-4 mb-6 serif-font">Título de la Exhibición 2026</h2>
-            <p class="text-zinc-400 text-lg leading-relaxed mb-8">
-                Una experiencia inmersiva que explora la intersección entre el arte digital y la materia orgánica. Únete a nosotros en una noche única de exposición y performance en vivo.
+            <span class="bg-black text-white px-3 py-1 text-xs font-bold uppercase tracking-widest">Próximo Evento</span>
+            <h2 class="text-5xl font-bold mt-6 mb-8 serif-font italic">SINAPSIS</h2>
+            <p class="text-gray-600 text-lg leading-relaxed mb-8">
+                Recorrido inmersivo a través de instalaciones, performance, música y arte visual. Comida y bebida.
             </p>
-            <div class="space-y-2 border-l-2 border-orange-500 pl-6 text-zinc-300">
-                <p><strong>Fecha:</strong> 15 de Marzo, 2026</p>
-                <p><strong>Lugar:</strong> Galería de Arte Contemporáneo</p>
-                <p><strong>Hora:</strong> 20:00 HS</p>
+            <div class="space-y-4 text-sm font-bold uppercase tracking-tighter text-gray-800">
+                <p>📍 San Isidro. Buenos Aires</p>
+                <p>📅 20 de Marzo, 2026 — 20:00 HS</p>
             </div>
         </div>
 
-        <div class="bg-zinc-900 p-10 rounded-sm border border-zinc-800 shadow-2xl">
-            <h3 class="text-2xl mb-6 serif-font">Reserva tu entrada</h3>
-            <form id="pagoForm" onsubmit="event.preventDefault();" class="space-y-4">
-                <input type="text" id="nombre" placeholder="Nombre y Apellido" class="w-full p-4 bg-zinc-800 border border-zinc-700 focus:border-orange-500 outline-none transition" required>
-                <input type="email" id="email" placeholder="Email de contacto" class="w-full p-4 bg-zinc-800 border border-zinc-700 focus:border-orange-500 outline-none transition" required>
+        <div class="bg-white p-12 shadow-[0_10px_60px_rgba(0,0,0,0.05)] border border-gray-100">
+            <h3 class="text-2xl font-bold mb-8 uppercase tracking-widest">APORTES</h3>
+            <form id="pagoForm" onsubmit="event.preventDefault();" class="space-y-6">
+                <input type="text" id="nombre" placeholder="NOMBRE COMPLETO" class="w-full p-4 bg-gray-50 border-b-2 border-gray-200 focus:border-black outline-none transition text-sm" required>
+                <input type="email" id="email" placeholder="EMAIL" class="w-full p-4 bg-gray-50 border-b-2 border-gray-200 focus:border-black outline-none transition text-sm" required>
                 
-                <div class="pt-4 space-y-3">
-                    <p class="text-xs uppercase text-zinc-500 font-bold tracking-widest">Selecciona el monto de pago</p>
-                    <button onclick="registrarYSubir(20000, 'https://mpago.la/1wYCWHd')" class="block w-full py-4 bg-zinc-100 text-black text-center font-bold hover:bg-orange-500 hover:text-white transition uppercase text-xs">Entrada General - $20.000</button>
-                    <button onclick="registrarYSubir(35000, 'URL_MP_35K')" class="block w-full py-4 border border-zinc-500 text-center font-bold hover:bg-zinc-100 hover:text-black transition uppercase text-xs">Entrada Especial - $35.000</button>
-                    <button onclick="registrarYSubir(50000, 'URL_MP_50K')" class="block w-full py-4 border border-orange-900 text-orange-700 text-center font-bold hover:border-orange-500 hover:text-orange-500 transition uppercase text-xs">Socio Mecenas - $50.000</button>
+                <div class="pt-6 space-y-4">
+                    <button onclick="registrarYSubir(20000, 'https://mpago.la/1wYCWHd')" class="w-full py-4 bg-black text-white font-bold hover:bg-gray-800 transition uppercase text-xs tracking-widest">Entrada — $20.000 <br>Para que nadie se quede afuera.</button>
+                    <button onclick="registrarYSubir(35000, 'URL_MP_35K')" class="w-full py-4 border-2 border-black text-black font-bold hover:bg-black hover:text-white transition uppercase text-xs tracking-widest">Entrada de Apoyo — $35.000 ⭐ <br>Ayuda a cubrir los costos de exposición.</button>
+                    <button onclick="registrarYSubir(50000, 'URL_MP_50K')" class="w-full py-4 bg-gray-200 text-gray-700 font-bold hover:bg-gray-300 transition uppercase text-xs tracking-widest">Entrada Mecenas — $50.000 <br>Hace posible que Punto de Encuentro siga creciendo.</button>
                 </div>
             </form>
+            <p class="text-gray-600 text-lg leading-relaxed mt-8">
+                *Si te interesa participar pero hoy no podés hacer un aporte, escribinos. info@
+            </p>    
         </div>
     </section>
 
-    <section class="py-20 bg-zinc-950">
-        <h2 class="text-center text-2xl uppercase tracking-[0.5em] mb-12 serif-font">Galería</h2>
-        <div class="gallery-container">
-            <img src="img/1.jpg?auto=format&fit=crop&w=800" class="gallery-item" onclick="ampliar(this.src)">
-            <img src="img/2.jpg?auto=format&fit=crop&w=800" class="gallery-item" onclick="ampliar(this.src)">
-            <img src="img/3.jpg?auto=format&fit=crop&w=800" class="gallery-item" onclick="ampliar(this.src)">
-            <img src="img/4.jpg?auto=format&fit=crop&w=800" class="gallery-item" onclick="ampliar(this.src)">
-            <img src="img/5.jpg?auto=format&fit=crop&w=800" class="gallery-item" onclick="ampliar(this.src)">
-            <img src="img/6.jpg?auto=format&fit=crop&w=800" class="gallery-item" onclick="ampliar(this.src)">
-            <img src="img/7.jpg?auto=format&fit=crop&w=800" class="gallery-item" onclick="ampliar(this.src)">
+    <section class="py-32 bg-gray-100">
+        <div class="container mx-auto px-6 max-w-4xl text-center">
+            <h3 class="text-gray-400 font-black uppercase tracking-[0.6em] text-sm md:text-xl mb-12">Manifiesto</h3>
+            <p class="text-4xl md:text-5xl serif-font italic leading-tight text-gray-800">
+                "Punto de encuentro impulsa proyectos interdisciplinarios entre artistas, técnicos, productores e investigadores generando obras inmersivas e innovadoras."
+            </p>
         </div>
     </section>
 
-    <section class="container mx-auto px-6 py-32 max-w-4xl text-center">
-        <h2 class="text-4xl mb-12 serif-font italic">Sobre el Proyecto</h2>
-        <div class="grid md:grid-cols-3 gap-12 text-left">
-            <div>
-                <h4 class="text-orange-500 font-bold mb-4">Misión</h4>
-                <p class="text-zinc-400 text-sm leading-relaxed">Fomentar el diálogo entre artistas emergentes y nuevas audiencias mediante espacios de exhibición no convencionales.</p>
+    <section class="py-24 bg-white overflow-hidden">
+        <h3 class="text-center text-sm md:text-lg uppercase tracking-[1em] mb-20 font-black">Galería de Obra</h3>
+        
+        <div class="gallery-wrapper px-4 lg:px-12">
+            <button class="nav-arrow arrow-left" onclick="scrollGallery(-1)" aria-label="Deslizar izquierda">&#10229;</button>
+            
+            <div class="gallery-container" id="mainGallery">
+                <img src="img/1.jpg?w=800" class="gallery-item" onclick="ampliar(this.src)">
+                <img src="img/2.jpg?w=800" class="gallery-item" onclick="ampliar(this.src)">
+                <img src="img/3.jpg?w=800" class="gallery-item" onclick="ampliar(this.src)">
+                <img src="img/4.jpg?w=800" class="gallery-item" onclick="ampliar(this.src)">
+                <img src="img/5.jpg?w=800" class="gallery-item" onclick="ampliar(this.src)">
+                <img src="img/6.jpg?w=800" class="gallery-item" onclick="ampliar(this.src)">
+                <img src="img/7.jpg?w=800" class="gallery-item" onclick="ampliar(this.src)">
             </div>
-            <div>
-                <h4 class="text-orange-500 font-bold mb-4">Objetivos</h4>
-                <p class="text-zinc-400 text-sm leading-relaxed">Lograr la sostenibilidad del sector artístico local y digitalizar la experiencia de compra de obra original.</p>
+
+            <button class="nav-arrow arrow-right" onclick="scrollGallery(1)" aria-label="Deslizar derecha">&#10230;</button>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-6 py-32 max-w-6xl">
+        <h2 class="text-center text-6xl md:text-6xl mb-24 serif-font italic">Pilares</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-16">
+            <div class="border-t border-gray-300 pt-8">
+                <h4 class="font-black uppercase text-xs tracking-widest mb-4">Juego Creativo</h4>
+                <p class="text-gray-500 text-sm mb-4 italic font-medium">Fomento de la creatividad y la experimentación</p>
+                <p class="text-gray-700 text-sm leading-relaxed">Las obras se desarrollan a través de procesos de laboratorio e investigación.</p>
             </div>
-            <div>
-                <h4 class="text-orange-500 font-bold mb-4">Ejes</h4>
-                <p class="text-zinc-400 text-sm leading-relaxed">Identidad, Territorio y Tecnología como motores de transformación social a través de la estética.</p>
+            <div class="border-t border-gray-300 pt-8">
+                <h4 class="font-black uppercase text-xs tracking-widest mb-4">Experiencia viva</h4>
+                <p class="text-gray-500 text-sm mb-4 italic font-medium">Experiencias significativas</p>
+                <p class="text-gray-700 text-sm leading-relaxed">Exposiciones inmersivas y sensoriales donde el público es parte.</p>
+            </div>
+            <div class="border-t border-gray-300 pt-8">
+                <h4 class="font-black uppercase text-xs tracking-widest mb-4">Disponibilidad</h4>
+                <p class="text-gray-500 text-sm mb-4 italic font-medium">Activación de espacios</p>
+                <p class="text-gray-700 text-sm leading-relaxed">Trabajo experimental con los recursos y espacios disponibles.</p>
+            </div>
+            <div class="border-t border-gray-300 pt-8">
+                <h4 class="font-black uppercase text-xs tracking-widest mb-4">Red</h4>
+                <p class="text-gray-500 text-sm mb-4 italic font-medium">Construcción de comunidad</p>
+                <p class="text-gray-700 text-sm leading-relaxed">Vínculos entre artistas, técnicos, instituciones y aliados.</p>
+            </div>
+            <div class="border-t border-gray-300 pt-8">
+                <h4 class="font-black uppercase text-xs tracking-widest mb-4">Distribución</h4>
+                <p class="text-gray-700 text-sm leading-relaxed">Formato colaborativo para sostener el proceso y su expansión.</p>
+            </div>
+            <div class="border-t border-gray-300 pt-8">
+                <h4 class="font-black uppercase text-xs tracking-widest mb-4">Semillero</h4>
+                <p class="text-gray-500 text-sm mb-4 italic font-medium">Producción artística original</p>
+                <p class="text-gray-700 text-sm leading-relaxed">Genera nuevos proyectos y acompaña su desarrollo.</p>
             </div>
         </div>
     </section>
@@ -123,29 +191,31 @@
         <img id="img-ampliada" src="" alt="Ampliada">
     </div>
 
-    <div id="popup-agradecimiento" class="fixed inset-0 z-[1000] hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-        <div class="bg-zinc-900 border border-zinc-700 p-8 max-w-md w-full text-center shadow-2xl rounded-sm">
-            <div class="text-orange-500 text-5xl mb-4">✓</div>
-            <h2 class="text-2xl serif-font mb-4 uppercase tracking-widest">¡Gracias por tu compra!</h2>
-            <p class="text-zinc-400 mb-6 text-sm leading-relaxed">
-                Tu entrada ha sido registrada. Acabamos de enviarte un mail de confirmación con los detalles para el ingreso. ¡Nos vemos pronto!
-            </p>
-            <button onclick="cerrarPopup()" class="px-8 py-3 bg-white text-black font-bold hover:bg-orange-500 hover:text-white transition uppercase text-xs tracking-widest">
-                Entendido
-            </button>
+    <div id="popup-agradecimiento" class="fixed inset-0 z-[1000] hidden flex items-center justify-center p-4 bg-black/40 backdrop-blur-md">
+        <div class="bg-white p-12 max-w-md w-full text-center shadow-2xl border border-gray-100">
+            <h2 class="text-2xl font-bold mb-6 uppercase tracking-widest">¡Gracias!</h2>
+            <p class="text-gray-600 mb-8 text-sm leading-relaxed">Tu entrada ha sido registrada. Acabamos de enviarte un mail de confirmación con los detalles para el ingreso. ¡Nos vemos pronto!</p>
+            <button onclick="cerrarPopup()" class="px-10 py-3 bg-black text-white font-bold uppercase text-xs tracking-widest">Cerrar</button>
         </div>
     </div>
 
     <script>
         const scriptURL = 'https://script.google.com/macros/s/AKfycbx6IDupuEyNT5w_HAv12FyJexGkV-OrInNzvk1y5d3mzWMD00tnIQPA3cv4h3Xpfl5f/exec';
 
-        // Ampliar imagen de galería
+        function scrollGallery(direction) {
+            const gallery = document.getElementById('mainGallery');
+            const scrollAmount = gallery.clientWidth * 0.8; 
+            gallery.scrollBy({
+                left: direction * scrollAmount,
+                behavior: 'smooth'
+            });
+        }
+
         function ampliar(src) {
             document.getElementById('img-ampliada').src = src;
             document.getElementById('lightbox').style.display = 'flex';
         }
 
-        // Cerrar Pop-up y limpiar URL
         function cerrarPopup() {
             document.getElementById('popup-agradecimiento').classList.add('hidden');
             window.history.replaceState({}, document.title, window.location.pathname);
