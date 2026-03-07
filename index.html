@@ -98,21 +98,41 @@
 
         }
 
-        .lightbox-nav {
+        .lightbox-footer {
             position: absolute;
-            width: 100%;
+            bottom: 40px;
             display: flex;
-            justify-content: space-between;
-            padding: 0 20px;
-            pointer-events: none;
+            align-items: center;
+            gap: 30px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px 30px;
+            border-radius: 50px;
+            backdrop-filter: blur(5px);
+            border: 1px solid #eee;
         }
 
-        .lightbox-nav button {
-            pointer-events: auto;
-            background: black;
-            color: white;
-            padding: 15px;
-            font-size: 1.2rem;
+        .lightbox-footer button {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: 0.3s;
+            color: #1A1A1A;
+            display: flex;
+            align-items: center;
+        }
+
+        .lightbox-footer button:hover {
+            color: #888;
+            transform: scale(1.1);
+        }
+
+        #contador {
+            font-size: 0.75rem;
+            font-weight: 900;
+            letter-spacing: 0.3em;
+            color: #1A1A1A;
+            margin: 0;
         }
     </style>
 </head>
@@ -225,17 +245,18 @@
         </div>
     </section>
 
-        <div id="lightbox">
-            <button onclick="cerrarLightbox()" class="absolute top-5 right-5 text-2xl font-light">&times; CERRAR</button>
         
-            <div class="lightbox-nav">
-                <button onclick="cambiarImagen(-1)">&#10229;</button>
-                <button onclick="cambiarImagen(1)">&#10230;</button>
-            </div>
+    <div id="lightbox">
+        <button onclick="cerrarLightbox()" class="absolute top-8 right-8 text-xs tracking-[0.3em] font-black uppercase hover:opacity-50 transition">Cerrar &times;</button>
+    
+        <img id="img-ampliada" src="" alt="Ampliada">
 
-            <img id="img-ampliada" src="" alt="Ampliada">
-            <p id="contador" class="mt-4 text-xs tracking-widest uppercase font-bold text-gray-400"></p>
+        <div class="lightbox-footer">
+            <button onclick="cambiarImagen(-1)" aria-label="Anterior">&#10229;</button>
+            <p id="contador"></p>
+            <button onclick="cambiarImagen(1)" aria-label="Siguiente">&#10230;</button>
         </div>
+    </div>
 
 
     <script>
@@ -345,24 +366,11 @@
                 localStorage.removeItem('userEmail');
             }
         }
-
-        document.getElementById('email').addEventListener('input', function (e) {
-            const email = e.target.value;
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
-            if (email.length > 0 && !emailRegex.test(email)) {
-            // Formato incorrecto: borde rojo y texto rojo
-            e.target.style.borderColor = "#ef4444"; // Rojo Tailwind
-            e.target.style.color = "#ef4444";
-            } else {
-            // Formato correcto o vacío: vuelve al gris original
-            e.target.style.borderColor = "#e5e7eb"; 
-            e.target.style.color = "#1A1A1A";
-            }
-        });
+      
     </script>
 </body>
 </html>
+
 
 
 
