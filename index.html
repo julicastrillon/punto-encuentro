@@ -172,8 +172,7 @@
     </section>
 
     <section class="py-24 bg-white overflow-hidden">
-        <h3 class="text-center text-sm md:text-lg uppercase tracking-[1em] mb-20 font-black">Galería de Obra</h3>
-        
+               
         <div class="gallery-wrapper px-4 lg:px-12">
             <button class="nav-arrow arrow-left" onclick="scrollGallery(-1)" aria-label="Deslizar izquierda">&#10229;</button>
             
@@ -291,8 +290,16 @@
             const nombre = document.getElementById('nombre').value;
             const email = document.getElementById('email').value;
 
+            
+
             if (!nombre || !email) {
                 alert("Por favor, completa nombre y email antes de pagar.");
+                return;
+            }
+            
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert("Por favor, ingresá un correo electrónico válido.");
                 return;
             }
 
@@ -338,9 +345,25 @@
                 localStorage.removeItem('userEmail');
             }
         }
+
+        document.getElementById('email').addEventListener('input', function (e) {
+            const email = e.target.value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+            if (email.length > 0 && !emailRegex.test(email)) {
+            // Formato incorrecto: borde rojo y texto rojo
+            e.target.style.borderColor = "#ef4444"; // Rojo Tailwind
+            e.target.style.color = "#ef4444";
+            } else {
+            // Formato correcto o vacío: vuelve al gris original
+            e.target.style.borderColor = "#e5e7eb"; 
+            e.target.style.color = "#1A1A1A";
+            }
+        });
     </script>
 </body>
 </html>
+
 
 
 
