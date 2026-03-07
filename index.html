@@ -308,6 +308,8 @@
         const imgAmpliada = document.getElementById('img-ampliada');
         const contador = document.getElementById('contador');
 
+        
+
         function scrollGallery(direction) {
 
             const gallery = document.getElementById('mainGallery');
@@ -407,10 +409,17 @@
                 localStorage.removeItem('userEmail');
             }
         }
+
+        function cerrarPopup() {
+
+            document.getElementById('popup-agradecimiento').classList.add('hidden');
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
       
     </script>
 </body>
 </html>
+
 
 
 
