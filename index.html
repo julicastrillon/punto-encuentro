@@ -44,7 +44,6 @@
             object-fit: contain;
             transition: all 0.4s ease;
             cursor: zoom-in;
-            filter: grayscale(100%);
         }
 
         @media (max-width: 768px) {
@@ -53,7 +52,6 @@
 
         .gallery-item:hover {
             transform: translateY(-5px);
-            filter: grayscale(0%);
         }
 
         /* FLECHAS NAVEGACIÓN */
@@ -172,13 +170,13 @@
                 <input type="email" id="email" placeholder="EMAIL" class="w-full p-4 bg-gray-50 border-b-2 border-gray-200 focus:border-black outline-none transition text-sm" required>
                 
                 <div class="pt-6 space-y-4">
-                    <button onclick="registrarYSubir(20000, 'https://mpago.la/1wYCWHd')" class="w-full py-4 bg-black text-white font-bold hover:bg-gray-800 transition uppercase text-xs tracking-widest">Entrada — $20.000 <br>Para que nadie se quede afuera.</button>
+                    <button onclick="registrarYSubir(20000, 'https://mpago.la/1wYCWHd')" class="w-full py-4 bg-gray-200 text-white font-bold hover:bg-gray-800 transition uppercase text-xs tracking-widest">Entrada — $20.000 <br>Para que nadie se quede afuera.</button>
                     <button onclick="registrarYSubir(35000, 'https://mpago.la/1YB9LZw')" class="w-full py-4 border-2 border-black text-black font-bold hover:bg-black hover:text-white transition uppercase text-xs tracking-widest">Entrada de Apoyo — $35.000 ⭐ <br>Ayuda a cubrir los costos de exposición.</button>
-                    <button onclick="registrarYSubir(50000, 'https://mpago.la/1u8TtiV')" class="w-full py-4 bg-gray-200 text-gray-700 font-bold hover:bg-gray-300 transition uppercase text-xs tracking-widest">Entrada Mecenas — $50.000 <br>Hace posible que Punto de Encuentro siga creciendo.</button>
+                    <button onclick="registrarYSubir(50000, 'https://mpago.la/1u8TtiV')" class="w-full py-4 bg-black text-gray-700 font-bold hover:bg-gray-300 transition uppercase text-xs tracking-widest">Entrada Mecenas — $50.000 <br>Hace posible que Punto de Encuentro siga creciendo.</button>
                 </div>
             </form>
             <p class="text-gray-600 text-lg leading-relaxed mt-8">
-                *Si te interesa participar pero hoy no podés hacer un aporte, escribinos: info@puntodeencuentro.art
+                * Si te interesa participar pero hoy no podés hacer un aporte, escribinos: info@puntodeencuentro.art
             </p>    
         </div>
     </section>
@@ -261,7 +259,7 @@
         
         <div class="flex flex-row justify-center items-center gap-16 md:gap-32">
             <div class="flex flex-col items-center">
-                <p class="text-xs uppercase tracking-[0.4em] text-gray-700 mb-6">Escríbenos</p>
+                <p class="text-xs uppercase tracking-[0.4em] text-gray-700 mb-6">Escribinos</p>
                 <a href="mailto:info@puntodeencuentro.art" class="text-gray-900 hover:text-gray-400 transition-all duration-500" aria-label="Email">
                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                         <rect width="20" height="16" x="2" y="4" rx="2"/>
@@ -271,7 +269,7 @@
             </div>
 
             <div class="flex flex-col items-center">
-                <p class="text-xs uppercase tracking-[0.4em] text-gray-700 mb-6">Síguenos</p>
+                <p class="text-xs uppercase tracking-[0.4em] text-gray-700 mb-6">Seguinos</p>
                 <a href="https://instagram.com/puntoexperimental" target="_blank" class="text-gray-900 hover:text-gray-400 transition-all duration-500" aria-label="Instagram">
                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                         <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
@@ -299,9 +297,28 @@
         </div>
     </div>
 
+    <div id="popup-instrucciones" class="fixed inset-0 z-[2000] hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div class="bg-white p-8 max-w-sm w-full text-center shadow-2xl border border-gray-100">
+            <h3 class="text-lg font-bold mb-4 uppercase tracking-widest">Aviso Importante</h3>
+            <p class="text-gray-600 mb-6 text-sm leading-relaxed">
+                Una vez realizado el pago, apretá <strong>"Volver a Punto de Encuentro"</strong> para recibir la confirmación por mail. <br><br> ¡Gracias!
+            </p>
+        
+            <div class="bg-gray-100 p-4 mb-6 rounded-lg">
+                <p class="text-[10px] uppercase tracking-widest text-gray-400 mb-2">Ejemplo del botón:</p>
+                <img src="https://img001.prntscr.com/file/img001/M2Y0ODhiMTMtYjZlNC00YzM0LTk5MWEtYzZjYmY5ZmRkZjZk.png" alt="Botón Volver" class="mx-auto rounded border shadow-sm">
+            </div>
+
+            <div class="flex gap-4">
+                <button onclick="cerrarInstrucciones()" class="flex-1 py-3 border border-gray-300 text-gray-500 font-bold uppercase text-[10px] tracking-widest hover:bg-gray-50 transition">Cancelar</button>
+                <button id="btn-confirmar-pago" class="flex-1 py-3 bg-black text-white font-bold uppercase text-[10px] tracking-widest hover:bg-gray-800 transition">Continuar</button>
+            </div>
+        </div>
+    </div>
+
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbyZBKpCtWIb4NbROMZ_BPouJTbiNenb6cGbZJoCiMPenwb2IoMTD8KHv-GAxs1v0NeMHw/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxsLS98vCt38LqWQGnFeM_uL0ufu_0eulQCDwP91frxz6_JcQSQNBndJrjylgwSLudA_Q/exec';
         let currentIndex = 0;
         const images = document.querySelectorAll('.gallery-item');
         const lightbox = document.getElementById('lightbox');
@@ -350,43 +367,51 @@
 
      
         // 1. Registro inicial antes de ir a Mercado Pago
-        async function registrarYSubir(monto, urlMercadoPago) {
-            const nombre = document.getElementById('nombre').value;
-            const email = document.getElementById('email').value;
+        let pagoPendiente = { monto: 0, url: '' }; // Variable global temporal
 
-            
+async function registrarYSubir(monto, urlMercadoPago) {
+    const nombre = document.getElementById('nombre').value;
+    const email = document.getElementById('email').value;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-            if (!nombre || !email) {
-                alert("Por favor, completa nombre y email antes de pagar.");
-                return;
-            }
-            
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                alert("Por favor, ingresá un correo electrónico válido.");
-                return;
-            }
+    if (!nombre || !email) { alert("Por favor, completa tus datos."); return; }
+    if (!emailRegex.test(email)) { alert("Por favor, ingresá un correo válido."); return; }
 
-            // Guardamos el email en localStorage para identificar al usuario al volver
+    // Guardamos los datos temporalmente
+    pagoPendiente.monto = monto;
+    pagoPendiente.url = urlMercadoPago;
+
+    // Mostramos el Pop-up de instrucciones
+    document.getElementById('popup-instrucciones').classList.remove('hidden');
+    
+    // Configuramos el botón "Continuar" dentro del pop-up
+    document.getElementById('btn-confirmar-pago').onclick = async function() {
+        this.innerText = "REDIRIGIENDO...";
+        this.disabled = true;
+
+        try {
+            // Guardamos el mail para cuando vuelva de MP
             localStorage.setItem('userEmail', email);
-
-            const btn = event.currentTarget;
-            btn.innerText = "Redirigiendo...";
-            btn.disabled = true;
-
-            try {
-                // Notificamos a Google Sheets el registro inicial (Pendiente)
-                await fetch(`${scriptURL}?action=registro_inicial&nombre=${encodeURIComponent(nombre)}&email=${encodeURIComponent(email)}&monto=${monto}`, {
-                    method: 'POST',
-                    mode: 'no-cors'
-                });
-                
-                window.location.href = urlMercadoPago;
-            } catch (error) {
-                console.error('Error:', error);
-                window.location.href = urlMercadoPago;
-            }
+            
+            // Registramos en el Google Sheet (Acción inicial)
+            await fetch(`${scriptURL}?action=registro_inicial&nombre=${encodeURIComponent(nombre)}&email=${encodeURIComponent(email)}&monto=${monto}`, {
+                method: 'POST', mode: 'no-cors'
+            });
+            
+            // Redirigimos a Mercado Pago
+            window.location.href = urlMercadoPago;
+        } catch (error) {
+            window.location.href = urlMercadoPago;
         }
+    };
+}
+
+function cerrarInstrucciones() {
+    document.getElementById('popup-instrucciones').classList.add('hidden');
+    const btnConfirmar = document.getElementById('btn-confirmar-pago');
+    btnConfirmar.innerText = "CONTINUAR";
+    btnConfirmar.disabled = false;
+}
 
         // 2. Detección de regreso desde Mercado Pago
         window.onload = function() {
@@ -419,6 +444,7 @@
     </script>
 </body>
 </html>
+
 
 
 
