@@ -170,9 +170,9 @@
                 <input type="email" id="email" placeholder="EMAIL" class="w-full p-4 bg-gray-50 border-b-2 border-gray-200 focus:border-black outline-none transition text-sm" required>
                 
                 <div class="pt-6 space-y-4">
-                    <button onclick="abrirCheckout(20000)" class="w-full py-4 bg-gray-200 text-gray-700 font-bold hover:bg-gray-800 transition uppercase text-xs tracking-widest">Entrada — $20.000 <br>Para que nadie se quede afuera.</button>
-                    <button onclick="abrirCheckout(35000)" class="w-full py-4 border-2 border-black text-black font-bold hover:bg-black hover:text-white transition uppercase text-xs tracking-widest">Entrada de Apoyo — $35.000 ⭐ <br>Ayuda a cubrir los costos de exposición.</button>
-                    <button onclick="abrirCheckout(50000)" class="w-full py-4 bg-black text-white font-bold hover:bg-gray-300 transition uppercase text-xs tracking-widest">Entrada Mecenas — $50.000 <br>Hace posible que Punto de Encuentro siga creciendo.</button>
+                    <button onclick="iniciarProcesoDePago(20000)" class="w-full py-4 bg-gray-200 text-gray-700 font-bold hover:bg-gray-800 transition uppercase text-xs tracking-widest">Entrada — $20.000 <br>Para que nadie se quede afuera.</button>
+                    <button onclick="iniciarProcesoDePago(35000)" class="w-full py-4 border-2 border-black text-black font-bold hover:bg-black hover:text-white transition uppercase text-xs tracking-widest">Entrada de Apoyo — $35.000 ⭐ <br>Ayuda a cubrir los costos de exposición.</button>
+                    <button onclick="iniciarProcesoDePago(50000)" class="w-full py-4 bg-black text-white font-bold hover:bg-gray-300 transition uppercase text-xs tracking-widest">Entrada Mecenas — $50.000 <br>Hace posible que Punto de Encuentro siga creciendo.</button>
                 </div>
             </form>
             <p class="text-gray-600 text-lg leading-relaxed mt-8">
@@ -327,7 +327,31 @@
 
 
     <script>
+    async function iniciarProcesoDePago(monto) {
+    const nombre = document.getElementById('nombre').value;
+    const email = document.getElementById('email').value;
 
+    // Validaciones básicas
+    if (!nombre || !email) {
+        alert("Por favor, completa tu nombre y mail antes de elegir el monto.");
+        return;
+    }
+
+    // PASO 1: Registro Inicial (Pendiente)
+    // Usamos 'no-cors' para que sea rápido y no trabe el flujo
+    try {
+        await fetch(`${scriptURL}?action=registro_inicial&nombre=${encodeURIComponent(nombre)}&email=${encodeURIComponent(email)}&monto=${monto}`, {
+            method: 'POST',
+            mode: 'no-cors'
+        });
+        console.log("Registro inicial guardado como PENDIENTE");
+    } catch (error) {
+        console.error("Error al registrar intento:", error);
+    }
+
+    // PASO 2: Abrir el Checkout API
+    abrirCheckout(monto);
+    }
             // Variable global para controlar la instancia del Brick
     let paymentBrickController;
     
@@ -547,6 +571,7 @@ function cerrarInstrucciones() {
     </script>
 </body>
 </html>
+
 
 
 
