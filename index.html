@@ -306,25 +306,7 @@
         </div>
     </div>
 
-    <div id="popup-instrucciones" class="fixed inset-0 z-[2000] hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-        <div class="bg-white p-8 max-w-sm w-full text-center shadow-2xl border border-gray-100">
-            <h3 class="text-lg font-bold mb-4 uppercase tracking-widest">Aviso Importante</h3>
-            <p class="text-gray-600 mb-6 text-sm leading-relaxed">
-                Una vez realizado el pago, apretá <strong>"Volver a Punto de Encuentro"</strong> para recibir la confirmación por mail. <br><br> ¡Gracias!
-            </p>
-        
-            <div class="bg-gray-100 p-4 mb-6 rounded-lg">
-                <p class="text-[10px] uppercase tracking-widest text-bold mb-2">Ejemplo del botón:</p>
-                <img src="img/volver.jpg" alt="Botón Volver" class="mx-auto rounded border shadow-sm">
-            </div>
-
-            <div class="flex gap-4">
-                <button onclick="cerrarInstrucciones()" class="flex-1 py-3 border border-gray-300 text-gray-500 font-bold uppercase text-[10px] tracking-widest hover:bg-gray-50 transition">Cancelar</button>
-                <button id="btn-confirmar-pago" class="flex-1 py-3 bg-black text-white font-bold uppercase text-[10px] tracking-widest hover:bg-gray-800 transition">Continuar</button>
-            </div>
-        </div>
-    </div>
-
+    
 
     <script>
     async function iniciarProcesoDePago(monto) {
@@ -393,22 +375,31 @@
                 },
                 onSubmit: ({ formData }) => {
                  return new Promise((resolve, reject) => {
-                        // IMPORTANTE: No usamos headers ni JSON.stringify aquí
-                        // para evitar el bloqueo de CORS de Google
                         fetch(scriptURL, {
                             method: "POST",
-                            body: JSON.stringify(formData), // Google lo recibirá en e.postData.contents
-                            mode: "no-cors" // Esto evita el chequeo de CORS, pero tiene un truco
+                            // Usamos text/plain para evitar el error de CORS (Preflight OPTIONS) 
+                            // pero Apps Script lo lee igual y lo parsea como JSON.
+                            headers: {
+                                "Content-Type": "text/plain;charset=utf-8"
+                            },
+                            body: JSON.stringify(formData) 
+                            // QUITAMOS mode: "no-cors"
                         })
-                        .then(() => {
-                            // Como 'no-cors' no deja leer la respuesta, 
-                            // asumimos que si no hubo error de red, el pago se procesó.
-                            // Para Checkout API real, lo ideal es redireccionar a una página de espera
-                            window.location.href = "index.html?status=success";
-                            resolve();
+                        .then((res) => res.json()) // ¡Ahora sí podemos leer la respuesta de Apps Script!
+                        .then((response) => {
+                            if (response.status === "approved") {
+                                // Pago exitoso
+                                window.location.href = "index.html?status=success";
+                                resolve();
+                            } else {
+                                // Tarjeta rechazada o error (puedes mostrar un alert)
+                                alert("El pago no fue aprobado. Estado de Mercado Pago: " + (response.status_detail || "rechazado"));
+                                reject();
+                            }
                         })
                         .catch((error) => {
                             console.error("Error de red:", error);
+                            alert("Hubo un error de conexión, intenta de nuevo.");
                             reject();
                         });
                     });
@@ -486,49 +477,9 @@
         // 1. Registro inicial antes de ir a Mercado Pago
         let pagoPendiente = { monto: 0, url: '' }; // Variable global temporal
 
-async function registrarYSubir(monto, urlMercadoPago) {
-    const nombre = document.getElementById('nombre').value;
-    const email = document.getElementById('email').value;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!nombre || !email) { alert("Por favor, completa tus datos."); return; }
-    if (!emailRegex.test(email)) { alert("Por favor, ingresá un correo válido."); return; }
 
-    // Guardamos los datos temporalmente
-    pagoPendiente.monto = monto;
-    pagoPendiente.url = urlMercadoPago;
 
-    // Mostramos el Pop-up de instrucciones
-    document.getElementById('popup-instrucciones').classList.remove('hidden');
-    
-    // Configuramos el botón "Continuar" dentro del pop-up
-    document.getElementById('btn-confirmar-pago').onclick = async function() {
-        this.innerText = "REDIRIGIENDO...";
-        this.disabled = true;
-
-        try {
-            // Guardamos el mail para cuando vuelva de MP
-            localStorage.setItem('userEmail', email);
-            
-            // Registramos en el Google Sheet (Acción inicial)
-            await fetch(`${scriptURL}?action=registro_inicial&nombre=${encodeURIComponent(nombre)}&email=${encodeURIComponent(email)}&monto=${monto}`, {
-                method: 'POST', mode: 'no-cors'
-            });
-            
-            // Redirigimos a Mercado Pago
-            window.location.href = urlMercadoPago;
-        } catch (error) {
-            window.location.href = urlMercadoPago;
-        }
-    };
-}
-
-function cerrarInstrucciones() {
-    document.getElementById('popup-instrucciones').classList.add('hidden');
-    const btnConfirmar = document.getElementById('btn-confirmar-pago');
-    btnConfirmar.innerText = "CONTINUAR";
-    btnConfirmar.disabled = false;
-}
 
         // 2. Detección de regreso desde Mercado Pago
         window.onload = function() {
@@ -561,6 +512,7 @@ function cerrarInstrucciones() {
     </script>
 </body>
 </html>
+
 
 
 
