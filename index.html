@@ -317,10 +317,11 @@
             return;
         }
         try {
-            // PASO 1: Anota el pago en la hoja y pide la preferencia
+            // Animación visual de que está cargando (opcional para feedback)
+            console.log("Generando preferencia...");
+            
             const url = `${scriptURL}?action=registro_inicial&nombre=${encodeURIComponent(nombre)}&email=${encodeURIComponent(email)}&monto=${monto}`;
             
-            // Usamos text/plain y quitamos no-cors para poder leer lo que nos responde
             const response = await fetch(url, {
                 method: 'POST',
                 headers: { "Content-Type": "text/plain;charset=utf-8" }
@@ -329,17 +330,22 @@
             const data = await response.json();
             
             if (data.preferenceId) {
-                // PASO 2: Abrimos el Checkout pasándole el ID mágico que nos dio Google
+                // Éxito: Abrimos el Checkout
                 abrirCheckout(monto, data.preferenceId);
+            } else if (data.status === "mp_error") {
+                // Mercado Pago rechazó la preferencia, mostramos por qué:
+                console.error("Detalle del error MP:", data.details);
+                alert("Mercado Pago arrojó este error: " + JSON.stringify(data.details.message || data.details));
             } else {
-                alert("Hubo un error al generar el pago. Intenta nuevamente.");
+                alert("Error interno en Apps Script: " + data.message);
             }
             
         } catch (error) {
             console.error("Error de red o CORS al registrar intento:", error);
-            alert("Problema de conexión con el servidor.");
+            alert("Problema de conexión con el banco de datos.");
         }
     }
+        
     let paymentBrickController;
             // Variable global para controlar la instancia del Brick
         
@@ -505,6 +511,7 @@
     </script>
 </body>
 </html>
+
 
 
 
