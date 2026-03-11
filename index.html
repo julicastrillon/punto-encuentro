@@ -170,14 +170,23 @@
                 <input type="email" id="email" placeholder="EMAIL" class="w-full p-4 bg-gray-50 border-b-2 border-gray-200 focus:border-black outline-none transition text-sm" required>
                 
                 <div class="pt-6 space-y-4">
-                    <button onclick="registrarYSubir(20000, 'https://mpago.la/1wYCWHd')" class="w-full py-4 bg-gray-200 text-gray-700 font-bold hover:bg-gray-800 transition uppercase text-xs tracking-widest">Entrada — $20.000 <br>Para que nadie se quede afuera.</button>
-                    <button onclick="registrarYSubir(35000, 'https://mpago.la/1YB9LZw')" class="w-full py-4 border-2 border-black text-black font-bold hover:bg-black hover:text-white transition uppercase text-xs tracking-widest">Entrada de Apoyo — $35.000 ⭐ <br>Ayuda a cubrir los costos de exposición.</button>
-                    <button onclick="registrarYSubir(50000, 'https://mpago.la/1u8TtiV')" class="w-full py-4 bg-black text-white font-bold hover:bg-gray-300 transition uppercase text-xs tracking-widest">Entrada Mecenas — $50.000 <br>Hace posible que Punto de Encuentro siga creciendo.</button>
+                    <button onclick="abrirCheckout(20000)" class="w-full py-4 bg-gray-200 text-gray-700 font-bold hover:bg-gray-800 transition uppercase text-xs tracking-widest">Entrada — $20.000 <br>Para que nadie se quede afuera.</button>
+                    <button onclick="abrirCheckout(35000)" class="w-full py-4 border-2 border-black text-black font-bold hover:bg-black hover:text-white transition uppercase text-xs tracking-widest">Entrada de Apoyo — $35.000 ⭐ <br>Ayuda a cubrir los costos de exposición.</button>
+                    <button onclick="abrirCheckout(50000)" class="w-full py-4 bg-black text-white font-bold hover:bg-gray-300 transition uppercase text-xs tracking-widest">Entrada Mecenas — $50.000 <br>Hace posible que Punto de Encuentro siga creciendo.</button>
                 </div>
             </form>
             <p class="text-gray-600 text-lg leading-relaxed mt-8">
                 * Si te interesa participar pero hoy no podés hacer un aporte, escribinos: info@puntodeencuentro.art
             </p>    
+        </div>
+
+        <script src="https://sdk.mercadopago.com/js/v2"></script>
+
+        <div id="checkout-api-form" class="hidden fixed inset-0 z-[3000] bg-white p-8 flex flex-col items-center">
+            <button onclick="cerrarCheckout()" class="absolute top-5 right-5 font-light uppercase tracking-widest text-xs">Cerrar</button>
+            <h2 class="text-2xl font-black tracking-[0.5em] uppercase mb-12">Pago Seguro</h2>
+    
+            <div id="cardPaymentBrick_container" class="w-full max-w-md"></div>
         </div>
     </section>
 
@@ -318,7 +327,101 @@
 
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbxsLS98vCt38LqWQGnFeM_uL0ufu_0eulQCDwP91frxz6_JcQSQNBndJrjylgwSLudA_Q/exec';
+
+            // Variable global para controlar la instancia del Brick
+    let paymentBrickController;
+    
+    async function abrirCheckout(monto) {
+        const mp = new MercadoPago('TEST-ba535a78-5825-4a8b-b08a-85fba748f1f5');
+        const bricksBuilder = mp.bricks();
+    
+        // 1. Mostrar el contenedor del Pop-up
+        const container = document.getElementById('checkout-api-form');
+        container.classList.remove('hidden');
+    
+        // 2. Limpiar instancia previa si existe (Evita errores de duplicación)
+        if (window.paymentBrickController) {
+            window.paymentBrickController.unmount();
+        }
+    
+        // 3. Configuración del Brick de Pagos (Multimedios)
+        const settings = {
+            initialization: {
+                amount: monto, // El monto que viene del botón
+                preferenceId: null, // No es necesario para Checkout API
+            },
+            customization: {
+                paymentMethods: {
+                    bankTransfer: "all",  // DEBIN / Transferencia
+                    creditCard: "all",    // Crédito
+                    debitCard: "all",     // Débito
+                    mercadoPago: "all",   // Saldo en cuenta y Mercado Crédito
+                },
+                visual: {
+                    style: {
+                        theme: "default", // Puedes usar 'dark' para que combine con SINAPSIS
+                    },
+                },
+            },
+            callbacks: {
+                onReady: () => {
+                    console.log("Formulario de pagos listo");
+                },
+                onSubmit: ({ selectedPaymentMethod, formData }) => {
+                    // Esta función envía los datos a tu Google Apps Script
+                    return new Promise((resolve, reject) => {
+                        fetch(scriptURL, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(formData),
+                        })
+                        .then((response) => response.json())
+                        .then((result) => {
+                            // Manejo de la respuesta del servidor (Apps Script)
+                            if (result.status === "approved") {
+                                window.location.href = "index.html?status=success";
+                                resolve();
+                            } else if (result.status === "in_process") {
+                                // Caso típico de Rapipago o Transferencia pendiente
+                                alert("¡Pedido generado! Tenés 24hs para completar el pago.");
+                                window.location.href = "index.html?status=pending";
+                                resolve();
+                            } else {
+                                alert("El pago fue rechazado. Por favor, intentá con otro medio.");
+                                reject();
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("Error al procesar:", error);
+                            reject();
+                        });
+                    });
+                },
+                onError: (error) => {
+                    console.error("Error en el Brick:", error);
+                },
+            },
+        };
+    
+        // 4. Renderizar el Brick en el contenedor
+        window.paymentBrickController = await bricksBuilder.create(
+            'payment', 
+            'cardPaymentBrick_container', 
+            settings
+        );
+    }
+    
+    // Función para cerrar el modal manualmente
+    function cerrarCheckout() {
+        document.getElementById('checkout-api-form').classList.add('hidden');
+        if (window.paymentBrickController) {
+            window.paymentBrickController.unmount();
+        }
+    }
+        
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbx6R35bEmERS5qW8MN66u_VZ8pAxl62KPZAncnxXf0-rk6CzCa4DCzAJP4F3qmS0_6cTg/exec';
         let currentIndex = 0;
         const images = document.querySelectorAll('.gallery-item');
         const lightbox = document.getElementById('lightbox');
@@ -444,6 +547,7 @@ function cerrarInstrucciones() {
     </script>
 </body>
 </html>
+
 
 
 
