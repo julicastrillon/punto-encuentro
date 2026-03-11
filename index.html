@@ -345,7 +345,7 @@
         
     async function abrirCheckout(monto, preferenceId) {
         // Asegúrate que esta sea tu PUBLIC_KEY de Mercado Pago
-        const mp = new MercadoPago('TEST-ba535a78-5825-4a8b-b08a-85fba748f1f5'); 
+        const mp = new MercadoPago('APP_USR-0949826b-c6d4-454f-89f0-942f0a27df89'); 
         const bricksBuilder = mp.bricks();
         const container = document.getElementById('checkout-api-form');
         container.classList.remove('hidden');
@@ -419,7 +419,7 @@
         }
     }
         
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbxXkJVYZ9uklnnUJvwFICZ0Hz8t6zZLwfoTcZPf0fpBZzQiohid2vYtCUQLl5K3i5WjHg/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzfbYMziZn-L5kx9OwzVXvdi7pWtl5xlhJCMk7xo51z18kOldoigQ45dOCEfAmNPp_-0Q/exec';
         let currentIndex = 0;
         const images = document.querySelectorAll('.gallery-item');
         const lightbox = document.getElementById('lightbox');
@@ -505,6 +505,7 @@
     </script>
 </body>
 </html>
+
 
 
 
