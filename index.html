@@ -310,63 +310,62 @@
 
     <script>
     async function iniciarProcesoDePago(monto) {
-    const nombre = document.getElementById('nombre').value;
-    const email = document.getElementById('email').value;
-
-    // Validaciones básicas
-    if (!nombre || !email) {
-        alert("Por favor, completa tu nombre y mail antes de elegir el monto.");
-        return;
+        const nombre = document.getElementById('nombre').value;
+        const email = document.getElementById('email').value;
+        if (!nombre || !email) {
+            alert("Por favor, completa tu nombre y mail antes de elegir el monto.");
+            return;
+        }
+        try {
+            // PASO 1: Anota el pago en la hoja y pide la preferencia
+            const url = `${scriptURL}?action=registro_inicial&nombre=${encodeURIComponent(nombre)}&email=${encodeURIComponent(email)}&monto=${monto}`;
+            
+            // Usamos text/plain y quitamos no-cors para poder leer lo que nos responde
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { "Content-Type": "text/plain;charset=utf-8" }
+            });
+            
+            const data = await response.json();
+            
+            if (data.preferenceId) {
+                // PASO 2: Abrimos el Checkout pasándole el ID mágico que nos dio Google
+                abrirCheckout(monto, data.preferenceId);
+            } else {
+                alert("Hubo un error al generar el pago. Intenta nuevamente.");
+            }
+            
+        } catch (error) {
+            console.error("Error de red o CORS al registrar intento:", error);
+            alert("Problema de conexión con el servidor.");
+        }
     }
-
-    // PASO 1: Registro Inicial (Pendiente)
-    // Usamos 'no-cors' para que sea rápido y no trabe el flujo
-    try {
-        await fetch(`${scriptURL}?action=registro_inicial&nombre=${encodeURIComponent(nombre)}&email=${encodeURIComponent(email)}&monto=${monto}`, {
-            method: 'POST',
-            mode: 'no-cors'
-        });
-        console.log("Registro inicial guardado como PENDIENTE");
-    } catch (error) {
-        console.error("Error al registrar intento:", error);
-    }
-
-    // PASO 2: Abrir el Checkout API
-    abrirCheckout(monto);
-    }
-            // Variable global para controlar la instancia del Brick
     let paymentBrickController;
-    
-    async function abrirCheckout(monto) {
-        const mp = new MercadoPago('APP_USR-0949826b-c6d4-454f-89f0-942f0a27df89');
+            // Variable global para controlar la instancia del Brick
+        
+    async function abrirCheckout(monto, preferenceId) {
+        // Asegúrate que esta sea tu PUBLIC_KEY de Mercado Pago
+        const mp = new MercadoPago('TEST-ba535a78-5825-4a8b-b08a-85fba748f1f5'); 
         const bricksBuilder = mp.bricks();
-    
-        // 1. Mostrar el contenedor del Pop-up
         const container = document.getElementById('checkout-api-form');
         container.classList.remove('hidden');
-    
-        // 2. Limpiar instancia previa si existe (Evita errores de duplicación)
         if (window.paymentBrickController) {
             window.paymentBrickController.unmount();
         }
-    
-        // 3. Configuración del Brick de Pagos (Multimedios)
         const settings = {
             initialization: {
-                amount: monto, // El monto que viene del botón
-                preferenceId: null, // No es necesario para Checkout API
+                amount: monto,
+                preferenceId: preferenceId, // Acá pasamos la preferencia desde Apps Script
             },
             customization: {
                 paymentMethods: {
-                    bankTransfer: "all",  // DEBIN / Transferencia
-                    creditCard: "all",    // Crédito
-                    debitCard: "all",     // Débito
-                    mercadoPago: "all",   // Saldo en cuenta y Mercado Crédito
+                    bankTransfer: "all",
+                    creditCard: "all",
+                    debitCard: "all",
+                    mercadoPago: "all", // ¡Ahora figurará el Saldo en Cuenta!
                 },
                 visual: {
-                    style: {
-                        theme: "default", // Puedes usar 'dark' para que combine con SINAPSIS
-                    },
+                    style: { theme: "default" },
                 },
             },
             callbacks: {
@@ -374,32 +373,28 @@
                     console.log("Formulario de pagos listo");
                 },
                 onSubmit: ({ formData }) => {
-                 return new Promise((resolve, reject) => {
+                    return new Promise((resolve, reject) => {
+                        // Enviamos el pago final a procesar en Google Apps Script
                         fetch(scriptURL, {
                             method: "POST",
-                            // Usamos text/plain para evitar el error de CORS (Preflight OPTIONS) 
-                            // pero Apps Script lo lee igual y lo parsea como JSON.
-                            headers: {
-                                "Content-Type": "text/plain;charset=utf-8"
-                            },
+                            headers: { "Content-Type": "text/plain;charset=utf-8" },
                             body: JSON.stringify(formData) 
-                            // QUITAMOS mode: "no-cors"
                         })
-                        .then((res) => res.json()) // ¡Ahora sí podemos leer la respuesta de Apps Script!
+                        .then((res) => res.json())
                         .then((response) => {
                             if (response.status === "approved") {
                                 // Pago exitoso
                                 window.location.href = "index.html?status=success";
                                 resolve();
                             } else {
-                                // Tarjeta rechazada o error (puedes mostrar un alert)
-                                alert("El pago no fue aprobado. Estado de Mercado Pago: " + (response.status_detail || "rechazado"));
+                                // Rechazado por algún motivo
+                                alert("El pago no fue aprobado.");
                                 reject();
                             }
                         })
                         .catch((error) => {
-                            console.error("Error de red:", error);
-                            alert("Hubo un error de conexión, intenta de nuevo.");
+                            console.error("Error procesando pago:", error);
+                            alert("Hubo un error, reintenta el pago.");
                             reject();
                         });
                     });
@@ -409,8 +404,6 @@
                 },
             },
         };
-    
-        // 4. Renderizar el Brick en el contenedor
         window.paymentBrickController = await bricksBuilder.create(
             'payment', 
             'cardPaymentBrick_container', 
@@ -512,6 +505,7 @@
     </script>
 </body>
 </html>
+
 
 
 
