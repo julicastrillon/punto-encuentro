@@ -310,132 +310,109 @@
         </div>
     </div>
 
-
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbyyjBsNJFwAlE46XVMreN5a9hGtogJkb8h-ragBXVXMZmjI0hHEWw5j7Dxo9dXXjSECOA/exec';
-        let currentIndex = 0;
-        const images = document.querySelectorAll('.gallery-item');
-        const lightbox = document.getElementById('lightbox');
-        const imgAmpliada = document.getElementById('img-ampliada');
-        const contador = document.getElementById('contador');
-
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyyjBsNJFwAlE46XVMreN5a9hGtogJkb8h-ragBXVXMZmjI0hHEWw5j7Dxo9dXXjSECOA/exec';
+    let currentIndex = 0;
+    const images = document.querySelectorAll('.gallery-item');
+    const lightbox = document.getElementById('lightbox');
+    const imgAmpliada = document.getElementById('img-ampliada');
+    const contador = document.getElementById('contador');
+    function scrollGallery(direction) {
+        const gallery = document.getElementById('mainGallery');
+        gallery.scrollBy({ left: direction * (gallery.clientWidth * 0.8), behavior: 'smooth' });
+    }
+    function abrirLightbox(index) {
+        currentIndex = index;
+        actualizarLightbox();
+        lightbox.style.display = 'flex';
+    }
+    function cerrarLightbox() {
+        lightbox.style.display = 'none';
+    }
+    function cambiarImagen(direction) {
+        currentIndex += direction;
+        if (currentIndex >= images.length) currentIndex = 0;
+        if (currentIndex < 0) currentIndex = images.length - 1;
+        actualizarLightbox();
+    }
+    function actualizarLightbox() {
+        const src = images[currentIndex].src;
+        imgAmpliada.src = src;
+        contador.innerText = `${currentIndex + 1} / ${images.length}`;
+    }
+    document.addEventListener('keydown', (e) => {
+        if (lightbox.style.display === 'flex') {
+            if (e.key === "ArrowRight") cambiarImagen(1);
+            if (e.key === "ArrowLeft") cambiarImagen(-1);
+            if (e.key === "Escape") cerrarLightbox();
+        }
+    });
+    let pagoPendiente = { monto: 0, url: '' };
+    async function registrarYSubir(monto, urlMercadoPago) {
+        const nombre = document.getElementById('nombre').value;
+        const email = document.getElementById('email').value;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!nombre || !email) { alert("Por favor, completa tus datos."); return; }
+        if (!emailRegex.test(email)) { alert("Por favor, ingresá un correo válido."); return; }
+        pagoPendiente.monto = monto;
+        pagoPendiente.url = urlMercadoPago;
+        document.getElementById('popup-instrucciones').classList.remove('hidden');
         
-
-        function scrollGallery(direction) {
-
-            const gallery = document.getElementById('mainGallery');
-            gallery.scrollBy({ left: direction * (gallery.clientWidth * 0.8), behavior: 'smooth' });
-        }
-
-        function abrirLightbox(index) {
-            currentIndex = index;
-            actualizarLightbox();
-            lightbox.style.display = 'flex';
-        }
-
-        function cerrarLightbox() {
-            lightbox.style.display = 'none';
-        }
-
-        function cambiarImagen(direction) {
-            currentIndex += direction;
-            if (currentIndex >= images.length) currentIndex = 0;
-            if (currentIndex < 0) currentIndex = images.length - 1;
-            actualizarLightbox();
-        }
-
-        function actualizarLightbox() {
-            const src = images[currentIndex].src;
-            imgAmpliada.src = src;
-            contador.innerText = `${currentIndex + 1} / ${images.length}`;
-        }
-            // Navegación con teclado
-
-        document.addEventListener('keydown', (e) => {
-            if (lightbox.style.display === 'flex') {
-                if (e.key === "ArrowRight") cambiarImagen(1);
-                if (e.key === "ArrowLeft") cambiarImagen(-1);
-                if (e.key === "Escape") cerrarLightbox();
-            }
-        });
-
-     
-        // 1. Registro inicial antes de ir a Mercado Pago
-        let pagoPendiente = { monto: 0, url: '' }; // Variable global temporal
-
-async function registrarYSubir(monto, urlMercadoPago) {
-    const nombre = document.getElementById('nombre').value;
-    const email = document.getElementById('email').value;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!nombre || !email) { alert("Por favor, completa tus datos."); return; }
-    if (!emailRegex.test(email)) { alert("Por favor, ingresá un correo válido."); return; }
-
-    // Guardamos los datos temporalmente
-    pagoPendiente.monto = monto;
-    pagoPendiente.url = urlMercadoPago;
-
-    // Mostramos el Pop-up de instrucciones
-    document.getElementById('popup-instrucciones').classList.remove('hidden');
-    
-    // Configuramos el botón "Continuar" dentro del pop-up
-    document.getElementById('btn-confirmar-pago').onclick = async function() {
-        this.innerText = "REDIRIGIENDO...";
-        this.disabled = true;
-
-        try {
-            // Guardamos el mail para cuando vuelva de MP
-            localStorage.setItem('userEmail', email);
-            
-            // Registramos en el Google Sheet (Acción inicial)
-            await fetch(`${scriptURL}?action=registro_inicial&nombre=${encodeURIComponent(nombre)}&email=${encodeURIComponent(email)}&monto=${monto}`, {
-                method: 'POST', mode: 'no-cors'
-            });
-            
-            // Redirigimos a Mercado Pago
-            window.location.href = urlMercadoPago;
-        } catch (error) {
-            window.location.href = urlMercadoPago;
-        }
-    };
-}
-
-function cerrarInstrucciones() {
-    document.getElementById('popup-instrucciones').classList.add('hidden');
-    const btnConfirmar = document.getElementById('btn-confirmar-pago');
-    btnConfirmar.innerText = "CONTINUAR";
-    btnConfirmar.disabled = false;
-}
-
-        // 2. Detección de regreso desde Mercado Pago
-        window.onload = function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const status = urlParams.get('status');
-            const emailPagador = localStorage.getItem('userEmail');
-
-            if (status === 'success' && emailPagador) {
-                // Mostrar el Pop-up de éxito
-                document.getElementById('popup-agradecimiento').classList.remove('hidden');
-                document.getElementById('popup-agradecimiento').classList.add('flex');
-
-                // Llamar al script para marcar como pagado y enviar el MAIL
-                fetch(`${scriptURL}?action=confirmar_pago&email=${encodeURIComponent(emailPagador)}`, {
+        document.getElementById('btn-confirmar-pago').onclick = async function() {
+            this.innerText = "REDIRIGIENDO...";
+            this.disabled = true;
+            try {
+                localStorage.setItem('userEmail', email);
+                
+                // 🔥 SOLUCIÓN 1: Usar FormData para estructurar correctamente el POST
+                const formData = new FormData();
+                formData.append('action', 'registro_inicial');
+                formData.append('nombre', nombre);
+                formData.append('email', email);
+                formData.append('monto', monto);
+                await fetch(scriptURL, {
                     method: 'POST',
+                    body: formData,
                     mode: 'no-cors'
                 });
-
-                // Limpiamos el email para evitar duplicados si recarga
-                localStorage.removeItem('userEmail');
+                
+                window.location.href = urlMercadoPago;
+            } catch (error) {
+                console.error("Error en Fetch", error);
+                window.location.href = urlMercadoPago;
             }
+        };
+    }
+    function cerrarInstrucciones() {
+        document.getElementById('popup-instrucciones').classList.add('hidden');
+        const btnConfirmar = document.getElementById('btn-confirmar-pago');
+        btnConfirmar.innerText = "CONTINUAR";
+        btnConfirmar.disabled = false;
+    }
+    window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const status = urlParams.get('status');
+        const emailPagador = localStorage.getItem('userEmail');
+        if (status === 'success' && emailPagador) {
+            document.getElementById('popup-agradecimiento').classList.remove('hidden');
+            document.getElementById('popup-agradecimiento').classList.add('flex');
+            // 🔥 SOLUCIÓN 1 (Continuación): FormData también para la confirmación
+            const formData = new FormData();
+            formData.append('action', 'confirmar_pago');
+            formData.append('email', emailPagador);
+            fetch(scriptURL, {
+                method: 'POST',
+                body: formData,
+                mode: 'no-cors'
+            });
+            localStorage.removeItem('userEmail');
         }
-
-        function cerrarPopup() {
-
-            document.getElementById('popup-agradecimiento').classList.add('hidden');
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }
-      
-    </script>
+    }
+    function cerrarPopup() {
+        document.getElementById('popup-agradecimiento').classList.add('hidden');
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+</script>
 </body>
 </html>
 
