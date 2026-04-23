@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Punto de Encuentro | Proyecto Artístico</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&family=Playfair+Display:italic,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&family=Playfair+Display:italic,wght@0,700;1,700&display=swap"
+        rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -13,9 +16,11 @@
             font-family: 'Montserrat', sans-serif;
             scroll-behavior: smooth;
         }
+
         .serif-font {
             font-family: 'Playfair Display', serif;
         }
+
         .gallery-wrapper {
             position: relative;
             display: flex;
@@ -32,13 +37,16 @@
             scroll-behavior: smooth;
             width: 100%;
         }
-        .gallery-container::-webkit-scrollbar { display: none; }
-        
-       .gallery-item {
+
+        .gallery-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .gallery-item {
 
             flex: 0 0 auto;
             /* Ajuste para que no se deformen las horizontales */
-            height: 50vh; 
+            height: 50vh;
             max-height: 500px;
             width: auto;
             object-fit: contain;
@@ -47,7 +55,9 @@
         }
 
         @media (max-width: 768px) {
-            .gallery-item { height: 40vh; }
+            .gallery-item {
+                height: 40vh;
+            }
         }
 
         .gallery-item:hover {
@@ -69,12 +79,16 @@
             cursor: pointer;
             z-index: 10;
             border-radius: 50%;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .arrow-left { left: 10px; }
+        .arrow-left {
+            left: 10px;
+        }
 
-        .arrow-right { right: 10px; }
+        .arrow-right {
+            right: 10px;
+        }
 
         /* LIGHTBOX MEJORADO */
 
@@ -82,17 +96,21 @@
             display: none;
             position: fixed;
             z-index: 999;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.98);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.98);
             flex-direction: column;
-            justify-content: center; align-items: center;
+            justify-content: center;
+            align-items: center;
         }
 
         #lightbox img {
             max-width: 90%;
             max-height: 80%;
             object-fit: contain;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
 
         }
 
@@ -134,16 +152,44 @@
         }
     </style>
 </head>
+
 <body>
 
-    <header class="relative bg-black h-[35vh] overflow-hidden flex items-center justify-center border-b border-gray-200">
-        <img src="img/4.jpg?auto=format&fit=crop&w=800" alt="Punto de Encuentro Banner" class="absolute inset-0 w-full h-full object-cover opacity-50" />
+    <header
+        class="relative bg-black h-[35vh] overflow-hidden flex items-center justify-center border-b border-gray-200">
+        <img src="img/4.jpg?auto=format&fit=crop&w=800" alt="Punto de Encuentro Banner"
+            class="absolute inset-0 w-full h-full object-cover opacity-50" />
         <div class="relative z-10 text-center px-6">
-            <h1 class="text-white text-3xl md:text-7xl font-black tracking-[0.2em] md:tracking-[0.4em] uppercase leading-tight">Punto de encuentro</h1>
+            <h1
+                class="text-white text-3xl md:text-7xl font-black tracking-[0.2em] md:tracking-[0.4em] uppercase leading-tight">
+                Punto de encuentro</h1>
         </div>
     </header>
 
-    <section class="container mx-auto px-6 py-24 grid lg:grid-cols-2 gap-20 items-center">
+
+    <section class="py-24 bg-white overflow-hidden">
+
+        <div class="gallery-wrapper px-4 lg:px-12">
+            <button class="nav-arrow arrow-left" onclick="scrollGallery(-1)"
+                aria-label="Deslizar izquierda">&#10229;</button>
+
+            <div class="gallery-container" id="mainGallery">
+                <img src="img/v4-1.jpg" class="gallery-item" onclick="abrirLightbox(0)">
+                <img src="img/v4-2.jpg" class="gallery-item" onclick="abrirLightbox(1)">
+                <img src="img/v4-3.jpg" class="gallery-item" onclick="abrirLightbox(2)">
+                <img src="img/v4-4.jpg" class="gallery-item" onclick="abrirLightbox(3)">
+                <img src="img/v4-5.jpg" class="gallery-item" onclick="abrirLightbox(4)">
+                <img src="img/v4-6.jpg" class="gallery-item" onclick="abrirLightbox(5)">
+                <img src="img/v4-7.jpg" class="gallery-item" onclick="abrirLightbox(6)">
+
+            </div>
+
+            <button class="nav-arrow arrow-right" onclick="scrollGallery(1)"
+                aria-label="Deslizar derecha">&#10230;</button>
+        </div>
+    </section>
+
+    <!-- <section class="container mx-auto px-6 py-24 grid lg:grid-cols-2 gap-20 items-center">
         <div>
             <span class="bg-black text-white px-3 py-1 text-2xl font-bold uppercase tracking-widest">V.4</span>
             <h2 class="text-5xl font-bold mt-6 mb-8 font-bold italic">SINAPSIS</h2>
@@ -179,21 +225,23 @@
                 * Si te interesa participar pero hoy no podés hacer un aporte, escribinos: info@puntodeencuentro.art
             </p>    
         </div>
-    </section>
+    </section> -->
 
     <section class="py-32 bg-gray-100">
         <div class="container mx-auto px-4 max-w-5xl text-center">
             <p class="text-4xl md:text-5xl font-black leading-tight text-gray-800">
-                Punto de encuentro impulsa proyectos interdisciplinarios entre artistas, técnicos, productores e investigadores generando obras inmersivas e innovadoras.
+                Punto de encuentro impulsa proyectos interdisciplinarios entre artistas, técnicos, productores e
+                investigadores generando obras inmersivas e innovadoras.
             </p>
         </div>
     </section>
 
     <section class="py-24 bg-white overflow-hidden">
-               
+
         <div class="gallery-wrapper px-4 lg:px-12">
-            <button class="nav-arrow arrow-left" onclick="scrollGallery(-1)" aria-label="Deslizar izquierda">&#10229;</button>
-            
+            <button class="nav-arrow arrow-left" onclick="scrollGallery(-1)"
+                aria-label="Deslizar izquierda">&#10229;</button>
+
             <div class="gallery-container" id="mainGallery">
                 <img src="img/1.jpg" class="gallery-item" onclick="abrirLightbox(0)">
                 <img src="img/2.jpg" class="gallery-item" onclick="abrirLightbox(1)">
@@ -205,7 +253,8 @@
 
             </div>
 
-            <button class="nav-arrow arrow-right" onclick="scrollGallery(1)" aria-label="Deslizar derecha">&#10230;</button>
+            <button class="nav-arrow arrow-right" onclick="scrollGallery(1)"
+                aria-label="Deslizar derecha">&#10230;</button>
         </div>
     </section>
 
@@ -213,27 +262,33 @@
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-16">
             <div class="border-t border-gray-300 pt-8">
                 <h4 class="font-black uppercase text-lg tracking-widest mb-4">Juego Creativo</h4>
-                <p class="text-gray-500 text-sm mb-4 italic font-medium">Fomento de la creatividad y la experimentación</p>
-                <p class="text-gray-700 text-sm leading-relaxed">Las obras se desarrollan a través de procesos de laboratorio e investigación.</p>
+                <p class="text-gray-500 text-sm mb-4 italic font-medium">Fomento de la creatividad y la experimentación
+                </p>
+                <p class="text-gray-700 text-sm leading-relaxed">Las obras se desarrollan a través de procesos de
+                    laboratorio e investigación.</p>
             </div>
             <div class="border-t border-gray-300 pt-8">
                 <h4 class="font-black uppercase text-lg tracking-widest mb-4">Experiencia viva</h4>
                 <p class="text-gray-500 text-sm mb-4 italic font-medium">Experiencias significativas</p>
-                <p class="text-gray-700 text-sm leading-relaxed">Exposiciones inmersivas y sensoriales donde el público es parte.</p>
+                <p class="text-gray-700 text-sm leading-relaxed">Exposiciones inmersivas y sensoriales donde el público
+                    es parte.</p>
             </div>
             <div class="border-t border-gray-300 pt-8">
                 <h4 class="font-black uppercase text-lg tracking-widest mb-4">Disponibilidad</h4>
                 <p class="text-gray-500 text-sm mb-4 italic font-medium">Activación de espacios</p>
-                <p class="text-gray-700 text-sm leading-relaxed">Trabajo experimental con los recursos y espacios disponibles.</p>
+                <p class="text-gray-700 text-sm leading-relaxed">Trabajo experimental con los recursos y espacios
+                    disponibles.</p>
             </div>
             <div class="border-t border-gray-300 pt-8">
                 <h4 class="font-black uppercase text-lg tracking-widest mb-4">Red</h4>
                 <p class="text-gray-500 text-sm mb-4 italic font-medium">Construcción de comunidad</p>
-                <p class="text-gray-700 text-sm leading-relaxed">Vínculos entre artistas, técnicos, instituciones y aliados.</p>
+                <p class="text-gray-700 text-sm leading-relaxed">Vínculos entre artistas, técnicos, instituciones y
+                    aliados.</p>
             </div>
             <div class="border-t border-gray-300 pt-8">
                 <h4 class="font-black uppercase text-lg tracking-widest mb-4">Distribución</h4>
-                <p class="text-gray-700 text-sm leading-relaxed">Formato colaborativo para sostener el proceso y su expansión.</p>
+                <p class="text-gray-700 text-sm leading-relaxed">Formato colaborativo para sostener el proceso y su
+                    expansión.</p>
             </div>
             <div class="border-t border-gray-300 pt-8">
                 <h4 class="font-black uppercase text-lg tracking-widest mb-4">Semillero</h4>
@@ -243,51 +298,60 @@
         </div>
     </section>
 
-        
 
-    <div id="popup-agradecimiento" class="fixed inset-0 z-[1000] hidden flex items-center justify-center p-4 bg-black/40 backdrop-blur-md">
+
+    <div id="popup-agradecimiento"
+        class="fixed inset-0 z-[1000] hidden flex items-center justify-center p-4 bg-black/40 backdrop-blur-md">
         <div class="bg-white p-12 max-w-md w-full text-center shadow-2xl border border-gray-100">
             <h2 class="text-2xl font-bold mb-6 uppercase tracking-widest">¡Gracias!</h2>
-            <p class="text-gray-600 mb-8 text-sm leading-relaxed">Tu entrada ha sido registrada. Acabamos de enviarte un mail de confirmación. ¡Nos vemos pronto!</p>
-            <button onclick="cerrarPopup()" class="px-10 py-3 bg-black text-white font-bold uppercase text-xs tracking-widest">Cerrar</button>
+            <p class="text-gray-600 mb-8 text-sm leading-relaxed">Tu entrada ha sido registrada. Acabamos de enviarte un
+                mail de confirmación. ¡Nos vemos pronto!</p>
+            <button onclick="cerrarPopup()"
+                class="px-10 py-3 bg-black text-white font-bold uppercase text-xs tracking-widest">Cerrar</button>
         </div>
     </div>
 
-<footer class="bg-white border-t border-gray-100 py-32">
-    <div class="container mx-auto px-6 text-center">
-        <h2 class="text-lg uppercase tracking-[0.8em] font-black mb-20">Contacto</h2>
-        
-        <div class="flex flex-row justify-center items-center gap-16 md:gap-32">
-            <div class="flex flex-col items-center">
-                <p class="text-xs uppercase tracking-[0.4em] text-gray-700 mb-6">Escribinos</p>
-                <a href="mailto:info@puntodeencuentro.art" class="text-gray-900 hover:text-gray-400 transition-all duration-500" aria-label="Email">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <rect width="20" height="16" x="2" y="4" rx="2"/>
-                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-                    </svg>
-                </a>
+    <footer class="bg-white border-t border-gray-100 py-32">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-lg uppercase tracking-[0.8em] font-black mb-20">Contacto</h2>
+
+            <div class="flex flex-row justify-center items-center gap-16 md:gap-32">
+                <div class="flex flex-col items-center">
+                    <p class="text-xs uppercase tracking-[0.4em] text-gray-700 mb-6">Escribinos</p>
+                    <a href="mailto:info@puntodeencuentro.art"
+                        class="text-gray-900 hover:text-gray-400 transition-all duration-500" aria-label="Email">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="20" height="16" x="2" y="4" rx="2" />
+                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                        </svg>
+                    </a>
+                </div>
+
+                <div class="flex flex-col items-center">
+                    <p class="text-xs uppercase tracking-[0.4em] text-gray-700 mb-6">Seguinos</p>
+                    <a href="https://instagram.com/puntoexperimental" target="_blank"
+                        class="text-gray-900 hover:text-gray-400 transition-all duration-500" aria-label="Instagram">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+                        </svg>
+                    </a>
+                </div>
             </div>
 
-            <div class="flex flex-col items-center">
-                <p class="text-xs uppercase tracking-[0.4em] text-gray-700 mb-6">Seguinos</p>
-                <a href="https://instagram.com/puntoexperimental" target="_blank" class="text-gray-900 hover:text-gray-400 transition-all duration-500" aria-label="Instagram">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
-                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                        <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
-                    </svg>
-                </a>
-            </div>
+
         </div>
+    </footer>
 
-        
-    </div>
-</footer>
 
-        
     <div id="lightbox">
-        <button onclick="cerrarLightbox()" class="absolute top-8 right-8 text-xs tracking-[0.3em] font-black uppercase hover:opacity-50 transition">Cerrar &times;</button>
-    
+        <button onclick="cerrarLightbox()"
+            class="absolute top-8 right-8 text-xs tracking-[0.3em] font-black uppercase hover:opacity-50 transition">Cerrar
+            &times;</button>
+
         <img id="img-ampliada" src="" alt="Ampliada">
 
         <div class="lightbox-footer">
@@ -297,123 +361,165 @@
         </div>
     </div>
 
-    <div id="popup-instrucciones" class="fixed inset-0 z-[2000] hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div id="popup-instrucciones"
+        class="fixed inset-0 z-[2000] hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
         <div class="bg-white p-8 max-w-sm w-full text-center shadow-2xl border border-gray-100">
             <h3 class="text-lg font-bold mb-4 uppercase tracking-widest">Aviso Importante</h3>
             <p class="text-gray-600 mb-6 text-sm leading-relaxed">
-                Una vez realizado el pago, envíanos el comprobante de pago a <strong>info@puntodeencuentro.art</strong> para confirmar tu lugar en la lista. <br><br> ¡Gracias!
+                Una vez realizado el pago, envíanos el comprobante de pago a <strong>info@puntodeencuentro.art</strong>
+                para confirmar tu lugar en la lista. <br><br> ¡Gracias!
             </p>
             <div class="flex gap-4">
-                <button onclick="cerrarInstrucciones()" class="flex-1 py-3 border border-gray-300 text-gray-500 font-bold uppercase text-[10px] tracking-widest hover:bg-gray-50 transition">Cancelar</button>
-                <button id="btn-confirmar-pago" class="flex-1 py-3 bg-black text-white font-bold uppercase text-[10px] tracking-widest hover:bg-gray-800 transition">Continuar</button>
+                <button onclick="cerrarInstrucciones()"
+                    class="flex-1 py-3 border border-gray-300 text-gray-500 font-bold uppercase text-[10px] tracking-widest hover:bg-gray-50 transition">Cancelar</button>
+                <button id="btn-confirmar-pago"
+                    class="flex-1 py-3 bg-black text-white font-bold uppercase text-[10px] tracking-widest hover:bg-gray-800 transition">Continuar</button>
             </div>
         </div>
     </div>
 
     <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyyjBsNJFwAlE46XVMreN5a9hGtogJkb8h-ragBXVXMZmjI0hHEWw5j7Dxo9dXXjSECOA/exec';
-    let currentIndex = 0;
-    const images = document.querySelectorAll('.gallery-item');
-    const lightbox = document.getElementById('lightbox');
-    const imgAmpliada = document.getElementById('img-ampliada');
-    const contador = document.getElementById('contador');
-    function scrollGallery(direction) {
-        const gallery = document.getElementById('mainGallery');
-        gallery.scrollBy({ left: direction * (gallery.clientWidth * 0.8), behavior: 'smooth' });
-    }
-    function abrirLightbox(index) {
-        currentIndex = index;
-        actualizarLightbox();
-        lightbox.style.display = 'flex';
-    }
-    function cerrarLightbox() {
-        lightbox.style.display = 'none';
-    }
-    function cambiarImagen(direction) {
-        currentIndex += direction;
-        if (currentIndex >= images.length) currentIndex = 0;
-        if (currentIndex < 0) currentIndex = images.length - 1;
-        actualizarLightbox();
-    }
-    function actualizarLightbox() {
-        const src = images[currentIndex].src;
-        imgAmpliada.src = src;
-        contador.innerText = `${currentIndex + 1} / ${images.length}`;
-    }
-    document.addEventListener('keydown', (e) => {
-        if (lightbox.style.display === 'flex') {
-            if (e.key === "ArrowRight") cambiarImagen(1);
-            if (e.key === "ArrowLeft") cambiarImagen(-1);
-            if (e.key === "Escape") cerrarLightbox();
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyyjBsNJFwAlE46XVMreN5a9hGtogJkb8h-ragBXVXMZmjI0hHEWw5j7Dxo9dXXjSECOA/exec';
+        let currentIndex = 0;
+        let currentGalleryImages = [];
+        const lightbox = document.getElementById('lightbox');
+        const imgAmpliada = document.getElementById('img-ampliada');
+        const contador = document.getElementById('contador');
+
+        // Configurar cada galería individualmente
+        document.querySelectorAll('.gallery-wrapper').forEach(wrapper => {
+            const container = wrapper.querySelector('.gallery-container');
+            const leftBtn = wrapper.querySelector('.arrow-left');
+            const rightBtn = wrapper.querySelector('.arrow-right');
+
+            if (leftBtn) {
+                leftBtn.removeAttribute('onclick');
+                leftBtn.addEventListener('click', () => {
+                    container.scrollBy({ left: -1 * (container.clientWidth * 0.8), behavior: 'smooth' });
+                });
+            }
+            if (rightBtn) {
+                rightBtn.removeAttribute('onclick');
+                rightBtn.addEventListener('click', () => {
+                    container.scrollBy({ left: 1 * (container.clientWidth * 0.8), behavior: 'smooth' });
+                });
+            }
+
+            const items = wrapper.querySelectorAll('.gallery-item');
+            items.forEach((item, index) => {
+                item.removeAttribute('onclick');
+                item.addEventListener('click', () => {
+                    currentGalleryImages = Array.from(items);
+                    currentIndex = index;
+                    actualizarLightbox();
+                    lightbox.style.display = 'flex';
+                });
+            });
+        });
+
+        // Funciones de fallback por si acaso
+        function scrollGallery(direction) {
+            const gallery = document.getElementById('mainGallery');
+            if (gallery) gallery.scrollBy({ left: direction * (gallery.clientWidth * 0.8), behavior: 'smooth' });
         }
-    });
-    let pagoPendiente = { monto: 0, url: '' };
-    async function registrarYSubir(monto, urlMercadoPago) {
-        const nombre = document.getElementById('nombre').value;
-        const email = document.getElementById('email').value;
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!nombre || !email) { alert("Por favor, completa tus datos."); return; }
-        if (!emailRegex.test(email)) { alert("Por favor, ingresá un correo válido."); return; }
-        pagoPendiente.monto = monto;
-        pagoPendiente.url = urlMercadoPago;
-        document.getElementById('popup-instrucciones').classList.remove('hidden');
-        
-        document.getElementById('btn-confirmar-pago').onclick = async function() {
-            this.innerText = "REDIRIGIENDO...";
-            this.disabled = true;
-            try {
-                localStorage.setItem('userEmail', email);
-                
-                // 🔥 SOLUCIÓN 1: Usar FormData para estructurar correctamente el POST
+
+        function abrirLightbox(index) {
+            currentGalleryImages = Array.from(document.querySelectorAll('.gallery-item'));
+            currentIndex = index;
+            actualizarLightbox();
+            lightbox.style.display = 'flex';
+        }
+
+        function cerrarLightbox() {
+            lightbox.style.display = 'none';
+        }
+
+        function cambiarImagen(direction) {
+            currentIndex += direction;
+            if (currentIndex >= currentGalleryImages.length) currentIndex = 0;
+            if (currentIndex < 0) currentIndex = currentGalleryImages.length - 1;
+            actualizarLightbox();
+        }
+
+        function actualizarLightbox() {
+            if (currentGalleryImages.length === 0) return;
+            const src = currentGalleryImages[currentIndex].src;
+            imgAmpliada.src = src;
+            contador.innerText = `${currentIndex + 1} / ${currentGalleryImages.length}`;
+        }
+        document.addEventListener('keydown', (e) => {
+            if (lightbox.style.display === 'flex') {
+                if (e.key === "ArrowRight") cambiarImagen(1);
+                if (e.key === "ArrowLeft") cambiarImagen(-1);
+                if (e.key === "Escape") cerrarLightbox();
+            }
+        });
+        let pagoPendiente = { monto: 0, url: '' };
+        async function registrarYSubir(monto, urlMercadoPago) {
+            const nombre = document.getElementById('nombre').value;
+            const email = document.getElementById('email').value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!nombre || !email) { alert("Por favor, completa tus datos."); return; }
+            if (!emailRegex.test(email)) { alert("Por favor, ingresá un correo válido."); return; }
+            pagoPendiente.monto = monto;
+            pagoPendiente.url = urlMercadoPago;
+            document.getElementById('popup-instrucciones').classList.remove('hidden');
+
+            document.getElementById('btn-confirmar-pago').onclick = async function () {
+                this.innerText = "REDIRIGIENDO...";
+                this.disabled = true;
+                try {
+                    localStorage.setItem('userEmail', email);
+
+                    // 🔥 SOLUCIÓN 1: Usar FormData para estructurar correctamente el POST
+                    const formData = new FormData();
+                    formData.append('action', 'registro_inicial');
+                    formData.append('nombre', nombre);
+                    formData.append('email', email);
+                    formData.append('monto', monto);
+                    await fetch(scriptURL, {
+                        method: 'POST',
+                        body: formData,
+                        mode: 'no-cors'
+                    });
+
+                    window.location.href = urlMercadoPago;
+                } catch (error) {
+                    console.error("Error en Fetch", error);
+                    window.location.href = urlMercadoPago;
+                }
+            };
+        }
+        function cerrarInstrucciones() {
+            document.getElementById('popup-instrucciones').classList.add('hidden');
+            const btnConfirmar = document.getElementById('btn-confirmar-pago');
+            btnConfirmar.innerText = "CONTINUAR";
+            btnConfirmar.disabled = false;
+        }
+        window.onload = function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const status = urlParams.get('status');
+            const emailPagador = localStorage.getItem('userEmail');
+            if (status === 'success' && emailPagador) {
+                document.getElementById('popup-agradecimiento').classList.remove('hidden');
+                document.getElementById('popup-agradecimiento').classList.add('flex');
+                // 🔥 SOLUCIÓN 1 (Continuación): FormData también para la confirmación
                 const formData = new FormData();
-                formData.append('action', 'registro_inicial');
-                formData.append('nombre', nombre);
-                formData.append('email', email);
-                formData.append('monto', monto);
-                await fetch(scriptURL, {
+                formData.append('action', 'confirmar_pago');
+                formData.append('email', emailPagador);
+                fetch(scriptURL, {
                     method: 'POST',
                     body: formData,
                     mode: 'no-cors'
                 });
-                
-                window.location.href = urlMercadoPago;
-            } catch (error) {
-                console.error("Error en Fetch", error);
-                window.location.href = urlMercadoPago;
+                localStorage.removeItem('userEmail');
             }
-        };
-    }
-    function cerrarInstrucciones() {
-        document.getElementById('popup-instrucciones').classList.add('hidden');
-        const btnConfirmar = document.getElementById('btn-confirmar-pago');
-        btnConfirmar.innerText = "CONTINUAR";
-        btnConfirmar.disabled = false;
-    }
-    window.onload = function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const status = urlParams.get('status');
-        const emailPagador = localStorage.getItem('userEmail');
-        if (status === 'success' && emailPagador) {
-            document.getElementById('popup-agradecimiento').classList.remove('hidden');
-            document.getElementById('popup-agradecimiento').classList.add('flex');
-            // 🔥 SOLUCIÓN 1 (Continuación): FormData también para la confirmación
-            const formData = new FormData();
-            formData.append('action', 'confirmar_pago');
-            formData.append('email', emailPagador);
-            fetch(scriptURL, {
-                method: 'POST',
-                body: formData,
-                mode: 'no-cors'
-            });
-            localStorage.removeItem('userEmail');
         }
-    }
-    function cerrarPopup() {
-        document.getElementById('popup-agradecimiento').classList.add('hidden');
-        window.history.replaceState({}, document.title, window.location.pathname);
-    }
-</script>
+        function cerrarPopup() {
+            document.getElementById('popup-agradecimiento').classList.add('hidden');
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    </script>
 </body>
+
 </html>
-
-
